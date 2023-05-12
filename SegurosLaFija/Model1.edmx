@@ -1,0 +1,154 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl" Namespace="Model1.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2005">
+        <EntityContainer Name="Model1TargetContainer" >
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2009/11/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="Model1" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" annotation:UseStrongSpatialTypes="false">
+        <EntityContainer Name="Model1Container" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clientes" EntityType="Model1.Cliente" />
+          <EntitySet Name="Polizas" EntityType="Model1.Poliza" />
+          <EntitySet Name="Autos" EntityType="Model1.Auto" />
+          <EntitySet Name="Accidentes" EntityType="Model1.Accidente" />
+          <EntitySet Name="Usuarios" EntityType="Model1.Usuario" />
+          <AssociationSet Name="ClientePoliza" Association="Model1.ClientePoliza">
+            <End Role="Cliente" EntitySet="Clientes" />
+            <End Role="Poliza" EntitySet="Polizas" />
+          </AssociationSet>
+          <AssociationSet Name="PolizaAuto" Association="Model1.PolizaAuto">
+            <End Role="Poliza" EntitySet="Polizas" />
+            <End Role="Auto" EntitySet="Autos" />
+          </AssociationSet>
+          <AssociationSet Name="AutoAccidente" Association="Model1.AutoAccidente">
+            <End Role="Auto" EntitySet="Autos" />
+            <End Role="Accidente" EntitySet="Accidentes" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" />
+          <Property Name="Apellido" Type="String" Nullable="false" />
+          <Property Name="NumTelf" Type="String" Nullable="false" />
+          <NavigationProperty Name="Polizas" Relationship="Model1.ClientePoliza" FromRole="Cliente" ToRole="Poliza" />
+        </EntityType>
+        <EntityType Name="Poliza">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumPoliza" Type="String" Nullable="false" />
+          <Property Name="CantPagar" Type="String" Nullable="false" />
+          <Property Name="Cobertura" Type="String" Nullable="false" />
+          <NavigationProperty Name="Cliente" Relationship="Model1.ClientePoliza" FromRole="Poliza" ToRole="Cliente" />
+          <Property Name="ClienteId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Autos" Relationship="Model1.PolizaAuto" FromRole="Poliza" ToRole="Auto" />
+        </EntityType>
+        <EntityType Name="Auto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Matricula" Type="String" Nullable="false" />
+          <Property Name="Modelo" Type="String" Nullable="false" />
+          <Property Name="Marca" Type="String" Nullable="false" />
+          <Property Name="Color" Type="String" Nullable="false" />
+          <NavigationProperty Name="Poliza" Relationship="Model1.PolizaAuto" FromRole="Auto" ToRole="Poliza" />
+          <Property Name="PolizaId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Accidentes" Relationship="Model1.AutoAccidente" FromRole="Auto" ToRole="Accidente" />
+        </EntityType>
+        <EntityType Name="Accidente">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Tipo" Type="String" Nullable="false" />
+          <Property Name="Fecha" Type="String" Nullable="false" />
+          <Property Name="Descripcion" Type="String" Nullable="false" />
+          <NavigationProperty Name="Auto" Relationship="Model1.AutoAccidente" FromRole="Accidente" ToRole="Auto" />
+          <Property Name="AutoId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="User" Type="String" Nullable="false" />
+          <Property Name="Pass" Type="String" Nullable="false" />
+        </EntityType>
+        <Association Name="ClientePoliza">
+          <End Type="Model1.Cliente" Role="Cliente" Multiplicity="1" />
+          <End Type="Model1.Poliza" Role="Poliza" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Poliza">
+              <PropertyRef Name="ClienteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PolizaAuto">
+          <End Type="Model1.Poliza" Role="Poliza" Multiplicity="1" />
+          <End Type="Model1.Auto" Role="Auto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Poliza">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Auto">
+              <PropertyRef Name="PolizaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="AutoAccidente">
+          <End Type="Model1.Auto" Role="Auto" Multiplicity="1" />
+          <End Type="Model1.Accidente" Role="Accidente" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auto">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Accidente">
+              <PropertyRef Name="AutoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs" Space="C-S">
+        <Alias Key="Model" Value="Model1" />
+        <Alias Key="Target" Value="Model1.Store" />
+        <EntityContainerMapping CdmEntityContainer="Model1Container" StorageEntityContainer="Model1TargetContainer">
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
